@@ -1,7 +1,7 @@
 # Setup
-title: Poole
-tagline: The Jekyll Butler
-url: https://getpoole.com
+title: WeSIG's Blog
+#tagline: The Jekyll Butler
+url: https://github.com/WeSIG/
 paginate: 1
 baseurl: ""
 permalink: pretty
