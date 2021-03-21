@@ -1,3 +1,5 @@
+markdown: kramdown
+
 # Setup
 title: WeSIG's Blog
 #tagline: The Jekyll Butler
@@ -33,9 +35,9 @@ sass:
 
 # Specify the author for blog posts
 author:
-  name: Mark Otto
-  url: https://twitter.com/mdo
-  email: markdotto@gmail.com
+  name: WeSIG
+  url: https://github.com/WeSIG
+  email: linboqiao@gmail.com
 
 # Custom vars
 version: 3.0.0
