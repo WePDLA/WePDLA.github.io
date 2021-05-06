@@ -21,10 +21,11 @@ Individual theme feedback and bug reports should be submitted to the theme's ind
 ## Contents
 
 - [Usage](#usage)
+<!--
 - [Development](#development)
 - [Author](#author)
 - [License](#license)
-
+-->
 
 ## Usage
 
