@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The TensorFlow Partitioning and Scheduling Problem: It's the Critical Path!
+title: The TensorFlow Partitioning and Scheduling Problem --- It's the Critical Path!
 comments: True
 author: liangpeng
 
