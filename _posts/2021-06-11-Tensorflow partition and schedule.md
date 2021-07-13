@@ -91,7 +91,7 @@ $$dfsScore(v-i,dev_l) = traffic(v_i,dev_l)\\ \times execTime(v_i,dev_l) \tag{11}
 
 ### 5.2 Experiments and Results
 看图吧。
-![result](pictures/tensorflow_partition_schedule/3.png)
+{% include figure.html src="/figures/tensorflow_partition_schedule/3.png" caption="图3"%}
 Hash划分和FIFO调度结果差的原因是不适应TF问题的特点。Hash划分虽然负责均衡很好，但是这不是减少数据流计算时间的重要方法。FIFO调度不支持关键路径的快速执行。
 
 **很明显，分区和调度策略的重点都是减少关键路径的计算时间，这是最
