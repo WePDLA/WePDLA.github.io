@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The TensorFlow Partitioning and Scheduling Problem --- It's the Critical Path!
+title: The TensorFlow Partitioning and Scheduling Problem --- It's the Critical Path! 阅读笔记
 comments: True
 author: liangpeng
 
@@ -8,7 +8,7 @@ author: liangpeng
 
 作者：梁鹏
 
-# The TensorFlow Partitioning and Scheduling Problem: It's the Critical Path!
+# The TensorFlow Partitioning and Scheduling Problem: It's the Critical Path! 阅读笔记
 
 2017年11月 arXiv:1711.01912v1 德国Stuttgart大学的文章
 ## ABSTRACT
@@ -28,24 +28,24 @@ SOTA数据流系统比如tensorflow需要将大的计算图划分到异构的CPU
 发现，最好的划分调度启发式方法是基于最小化critical path的执行时间，效果比hash-based partition and FIFO schedule 快4倍
 
 ##  2. Problem Formulation
-令$G=(V,E)$为有向无环数据流图，$E$在TensorFlow中相当于tensor，其$e_i$的权重是通信量$t_i$，$V$中$v_i$的权重是计算复杂度$c_i$，只有在其所有的入边都available的时候才标记为schedulable。
+令$$G=(V,E)$$为有向无环数据流图，$$E$$在TensorFlow中相当于tensor，其$$e_i$$的权重是通信量$$t_i$$，$$V$$中$$v_i$$的权重是计算复杂度$$c_i$$，只有在其所有的入边都available的时候才标记为schedulable。
 
-令$D$为设备集合，集合中的每一个设备$dev_i$都有计算速度$s_i$。并且，$dev_i$还有对应的最大内存容量$C_i$。例如，数据从源顶点流出到边时需要消耗设备的内存。任意两个设备通过物理或者虚拟网络连接。带宽矩阵$B \in \mathbb{R}^{k\times k}$，设备$dev_i$和$dev_j$之间 的通信带宽为$B_{i,j}$ Bytes/second.
+令$$D$$为设备集合，集合中的每一个设备$$dev_i$$都有计算速度$$s_i$$。并且，$$dev_i$$还有对应的最大内存容量$$C_i$$。例如，数据从源顶点流出到边时需要消耗设备的内存。任意两个设备通过物理或者虚拟网络连接。带宽矩阵$$B \in \mathbb{R}^{k\times k}$$，设备$$dev_i$$和$$dev_j$$之间 的通信带宽为$$B_{i,j}$$ Bytes/second.
 
-搭配约束(collocation constraints)$\mathbb{C \in V\times V}$ 指示了需要放在同一设备上的vertice间的对称性。并且，现实世界中的数据流设备还有隐形或者显性的计算操作的placement constraints，记为$\mathbb{D}\in V\times D$。
+搭配约束(collocation constraints)$$\mathbb{C \in V\times V}$$ 指示了需要放在同一设备上的vertice间的对称性。并且，现实世界中的数据流设备还有隐形或者显性的计算操作的placement constraints，记为$$\mathbb{D}\in V\times D$$。
 
-在图一中给了例子，有向无环图（DAG）由12个顶点组成，他们被划分到了三个设备上。这一划分是全局的。划分之后，每一个设备需要执行一个集合的顶点。这可能会有多种调度策略，比如$dev_1$可以选择调度$v_1,v_2$或者$v_3$。
-![Figure 1](pictures/tensorflow_partition_schedule/1.png)
+在图一中给了例子，有向无环图（DAG）由12个顶点组成，他们被划分到了三个设备上。这一划分是全局的。划分之后，每一个设备需要执行一个集合的顶点。这可能会有多种调度策略，比如$$dev_1$$可以选择调度$$v_1,v_2$$或者$$v_3$$。
+{% include figure.html src="/figures/tensorflow_partition_schedule/1.png" caption="图1"%}
 
-划分函数$p:V \to D$将顶点映射到设备上，调度函数$f:V \to N$将顶点映射到顶点被执行的time slots上。则目标变为 
+划分函数$$p:V \to D$$将顶点映射到设备上，调度函数$$f:V \to N$$将顶点映射到顶点被执行的time slots上。则目标变为 
 $$min_f(max_{v\in V}f(v))\tag{1}$$ 
 Note: 函数f的返回值是顶点执行的开始时间，但是我们需要研究的是最小化最大完成时间。我们可以通过将所有顶点连接到一个没有出边的sink 顶点上来，并且连接边权重均为0，来解决这一问题。
 
-我们需要保证，内存约束是完全实现的。将$dev_j$上在时间$l$时的活跃边记为$E_{active}(l,j)$，则有：
+我们需要保证，内存约束是完全实现的。将$$dev_j$$上在时间$$l$$时的活跃边记为$$E_{active}(l,j)$$，则有：
 $$\forall dev_j \in D, l \in \mathbb{N}:\sum_{e_i \in E_{active(l,j)}}t_i \lt C_j \tag{2}$$
 且要满足collocation constraints, 即他们需要分在同一设备上，
 $$\forall v_i,v_j \in V: (v_i,v_j)\in \mathbb{C}\to p(v_i)=p(v_j) \tag{3}$$
-最后，需要满足设备约束，即如果$v_i$在$dev_j$上，需要满足
+最后，需要满足设备约束，即如果$$v_i$$在$$dev_j$$上，需要满足
 $$\forall v_i \in V, dev_j \in D: (v_i,dev_j)\in \mathbb{D}\to p(v_i)=dev_j \tag{4}$$
 
 ### 2.1 NP-completeness
