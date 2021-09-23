@@ -160,19 +160,19 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 
 #### 释放和恢复Tensor
 用户并不知道他访问的 tensor 当前是否在显存中，但是框架能保证当用户想获得tensor的内容时，就算它不在显存中，也可以立即恢复出来。
-{% include figure.html src="/figures/memory-management/2.png" caption=""%}
+{% include figure.html src="/figures/memory-management/2.jpeg" caption=""%}
 
 如上图，若框架要释放掉当前这个 tensor 的显存，**reset 它的指针就可以把最底层的显存释放掉**。为了将来能够恢复出该 tensor，需要在 `tensorInfo` 中维护一些信息，如果使用 drop（用计算换显存）就需要记录计算历史；如果使用 swap（用带宽换显存），就需要把它先交换到 cpu 上记录一个 host tensor。将来如果用户访问了该 tensor，框架会检查它对应的 `tensorInfo`，如果发现已经不在显存上了，就根据计算历史或 host tensor 在显存中恢复出 tensor 的内容返回给用户。
 
 #### 引入DTR后的算子执行
 
-{% include figure.html src="/figures/memory-management/3.png" caption=""%}
+{% include figure.html src="/figures/memory-management/3.jpeg" caption=""%}
 上图是 DTR 核心的伪代码，对于`ApplyOp`方法，以往只需要执行**黄色**的代码，表示对 input 输入执行op算子。现在由于我们引入了 DTR 技术，这些输入 tensor 有可能已经不在显存中了。因此，执行前首先需要给它们打上标记，在这个算子执行完之前不能释放掉这些输入 tensor。然后调用 AutoEvict()，控制当前的显存占用不超过阈值。AutoEvict()方法将检查当前的显存占用，如果一直超过阈值就不断地调用FindBestTensor()算法，再根据启发式估价函数找出最优的 tensor 释放掉。
 
 做完 AutoEvict() 之后，当前的显存占用已经低于阈值了，此时检查输入的每个 tensor 是否在显存中，如果不在显存中就调用 Regenerate()把它恢复出来，然后才能执行当前算子。Regenerate(x)的过程就是重计算 x 的过程，重计算的时候读取 x 的计算历史—— op 和 inputs，然后递归调用 ApplyOp 就可以恢复出 x。
 
 #### Tensor的删除
-{% include figure.html src="/figures/memory-management/4.png" caption=""%}
+{% include figure.html src="/figures/memory-management/4.jpeg" caption=""%}
 注意到，由于这里的 Elemwise 算子都是加法（scalar add），所以它的输入（两个红色的 tensor）在求导的时候都不会被用到。因此，求导器不需要保留住两个红色的 tensor，在前向计算完之后它们实际上是会被立即释放掉的。但在引入 DTR 技术之后，如果真的删掉了这两个红色的 tensor（把tensorInfo也删掉了），就会导致图中绿色的 tensor 永远不可能被释放，因为它们的计算源（红色 tensor）已经丢失了，一旦释放红色 tensor，绿色的 tensor 就再也恢复不出来了。解决方案是在前向的过程中用**Drop**来代替删除，不删除tensorInfo，也就是“假删除” —— 保留tensorInfo，只是释放掉tensorInfo下面对应的显存。这样只需要保留 9MB 的 tensor 就可以释放掉后面 4 个 25MB 的 tensor，并且可以在将来的任意时刻恢复出它们。
 ![](media/16299430196071/16301348831295.jpg)
 上图就是 MegEngine 中对 tensor 的删除的伪代码实现，在解释器收到 Del 指令时，会对 tensorInfo 调用 Free()函数，如果是前向则为**假删除**，否则则尝试**真删除**，但只有在“某个Tensor既被用户删除，且没有任何tensor依赖它（ref_cnt = 0）的时候可以真正删除”。
@@ -180,7 +180,7 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 假删除的实现很简单，打上删除标记，释放掉 tensorInfo 管理的显存即可；
 
 ### 碎片问题和优化方法
-{% include figure.html src="/figures/memory-management/5.png" caption=""%}
+{% include figure.html src="/figures/memory-management/5.jpeg" caption=""%}
 
 #### 参数原地更新
 就是inplace
@@ -188,11 +188,11 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 #### 改进估价函数
 
 引入碎片相关的信息
-{% include figure.html src="/figures/memory-management/6.png" caption=""%}
+{% include figure.html src="/figures/memory-management/6.jpeg" caption=""%}
 有可能一个Tensor虽然不大，但是它左右的空闲段很大，因此释放这个Tensor也会有很大的收益
 
 #### 静态分配策略
-{% include figure.html src="/figures/memory-management/7.png" caption=""%}
+{% include figure.html src="/figures/memory-management/7.jpeg" caption=""%}
 <font color=purple>这个方法应该是最有效的</font>
 使用Pushdown算法，可以降低10%，不存在碎片
 
@@ -210,7 +210,7 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 
 #### 内存优化的两种方式
 * swapping：swapping就是用io来换显存。swapping利用CPU的DRAM，将其作为一个更大的外部存储器，并且异步地将数据在CPU和GPU之间进行复制。Swapping的同步开销是巨大的，看图中的同步开销指的是在层与层之间的FWD和BWD过程中出现的overhead，毕竟之间存在计算依赖。Swapping还有一个决策性质的问题就是<font color=blue>什么时候做data在CPU和GPU的in/out</font>。
-{% include figure.html src="/figures/memory-management/8.png" caption=""%}
+{% include figure.html src="/figures/memory-management/12.png" caption=""%}
 
 * recomputing：recomputing就是用计算换显存。在forward过程中对某些feature map打checkpoint，然后在backward的时候利用这些checkpoints进行重计算。 
 但是<font color=purple>不管是swapping还是recomputing都会增加训练时间</font>。
@@ -232,7 +232,7 @@ guided execution：在第一个iteration之后的训练过程，根据测试阶�
 
 个人觉得设计的实现思路是这样的：在Passive mode下，如果访问tensor超过了内存，那就对access count小的tensor进行释放，如果之后需要的话，再进行重生成。
 
-{% include figure.html src="/figures/memory-management/12.png" caption=""%}
+{% include figure.html src="/figures/memory-management/13.png" caption=""%}
 
 #### Swap和重计算的benefit
 
@@ -253,25 +253,25 @@ MSPS=$\frac{Memory Saving}{Recomutation Time}$
 ```
 举个例子：T1->T2->T3->T4，T1、T2、T4都需要进行重计算，如果对于T3的最后一次访问是在T4FWD的时候，在重计算T4的时候T3就变得不可用，因为在T3的最后一次访问之后，T3被释放了。那么T4的重计算就需要从T2开始，即使T2也需要重计算，只要T2在内存中，就不再需要从T1开始重计算T4。如果T3也在BWD过程中被访问到，比较T3的最后一个访问时间和T4的反向访问时间，若T3的最后一个访问时间较大，就说明T3在T4访问之后再进行访问，那T3在T4的重计算中可用是一个很直观的想法，否则的话，T3也需要被重计算。
 根据这个例子，对于每个tensor，有两部分信息可以在重计算的时候使用：(1)张量自身的生命周期，主要用来判断它自身能构成为别的张量重计算时候的source；(2)张量自身是否需要进行重计算，需要重计算的张量都在GPU内存中（<font color=purple>我个人理解是这些张量不是在GPU内存中，而是他们不需要进行swap，在重生成的时候直接就在GPU中了，如果本身就在GPU内存中，那其实还是对内存有消耗</font>）。对于重计算的策略就是：<font color=red>一个Tensor重计算所需的时间越小，且它所需memory越大，那这个Tensor就更有价值去做重计算</font>。
-{% include figure.html src="/figures/memory-management/13.png" caption=""%}
+{% include figure.html src="/figures/memory-management/16.png" caption=""%}
 
 
 #### Swap和重计算的选择
 
 <font color=red>swap可以和计算进行高度的overlap</font>。在swap和重计算中，优先选择swap。
 首先系统会将符合以下两者的Tensor加入被处理列表：（1）Tensor会被处理多次（2）Tensor在内存密集的时候被访问。系统先根据FT（FT = SwapInStartTime - SwapOutEndTime）作为依据，如果一个Tensor的FT非常大那么意味着这个Tensor更值得去去swap或者recompute，那就把这个大FT的Tensor放到列表的前面。如果全部都用swap的方案不合适，那么就用混合方案，实际上就是对于每个tensor而言，选择开销较小的那个方式。
-{% include figure.html src="/figures/memory-management/14.png" caption=""%}
+{% include figure.html src="/figures/memory-management/15.png" caption=""%}
 
 
 ### Experiments 
 
 #### Swap
 
-{% include figure.html src="/figures/memory-management/15.png" caption=""%}
+{% include figure.html src="/figures/memory-management/17.png" caption=""%}
 
 #### Recompute
 
-{% include figure.html src="/figures/memory-management/16.png" caption=""%}
+{% include figure.html src="/figures/memory-management/18.png" caption=""%}
 
 
 ### Individuals 
