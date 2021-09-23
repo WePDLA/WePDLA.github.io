@@ -160,19 +160,19 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 
 #### 释放和恢复Tensor
 用户并不知道他访问的 tensor 当前是否在显存中，但是框架能保证当用户想获得tensor的内容时，就算它不在显存中，也可以立即恢复出来。
-{% include figure.html src="/figures/memory-management/2.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/2.jpg" caption=""%}
 
 如上图，若框架要释放掉当前这个 tensor 的显存，**reset 它的指针就可以把最底层的显存释放掉**。为了将来能够恢复出该 tensor，需要在 `tensorInfo` 中维护一些信息，如果使用 drop（用计算换显存）就需要记录计算历史；如果使用 swap（用带宽换显存），就需要把它先交换到 cpu 上记录一个 host tensor。将来如果用户访问了该 tensor，框架会检查它对应的 `tensorInfo`，如果发现已经不在显存上了，就根据计算历史或 host tensor 在显存中恢复出 tensor 的内容返回给用户。
 
 #### 引入DTR后的算子执行
 
-{% include figure.html src="/figures/memory-management/3.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/3.jpg" caption=""%}
 上图是 DTR 核心的伪代码，对于`ApplyOp`方法，以往只需要执行**黄色**的代码，表示对 input 输入执行op算子。现在由于我们引入了 DTR 技术，这些输入 tensor 有可能已经不在显存中了。因此，执行前首先需要给它们打上标记，在这个算子执行完之前不能释放掉这些输入 tensor。然后调用 AutoEvict()，控制当前的显存占用不超过阈值。AutoEvict()方法将检查当前的显存占用，如果一直超过阈值就不断地调用FindBestTensor()算法，再根据启发式估价函数找出最优的 tensor 释放掉。
 
 做完 AutoEvict() 之后，当前的显存占用已经低于阈值了，此时检查输入的每个 tensor 是否在显存中，如果不在显存中就调用 Regenerate()把它恢复出来，然后才能执行当前算子。Regenerate(x)的过程就是重计算 x 的过程，重计算的时候读取 x 的计算历史—— op 和 inputs，然后递归调用 ApplyOp 就可以恢复出 x。
 
 #### Tensor的删除
-{% include figure.html src="/figures/memory-management/4.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/4.jpg" caption=""%}
 注意到，由于这里的 Elemwise 算子都是加法（scalar add），所以它的输入（两个红色的 tensor）在求导的时候都不会被用到。因此，求导器不需要保留住两个红色的 tensor，在前向计算完之后它们实际上是会被立即释放掉的。但在引入 DTR 技术之后，如果真的删掉了这两个红色的 tensor（把tensorInfo也删掉了），就会导致图中绿色的 tensor 永远不可能被释放，因为它们的计算源（红色 tensor）已经丢失了，一旦释放红色 tensor，绿色的 tensor 就再也恢复不出来了。解决方案是在前向的过程中用**Drop**来代替删除，不删除tensorInfo，也就是“假删除” —— 保留tensorInfo，只是释放掉tensorInfo下面对应的显存。这样只需要保留 9MB 的 tensor 就可以释放掉后面 4 个 25MB 的 tensor，并且可以在将来的任意时刻恢复出它们。
 ![](media/16299430196071/16301348831295.jpg)
 上图就是 MegEngine 中对 tensor 的删除的伪代码实现，在解释器收到 Del 指令时，会对 tensorInfo 调用 Free()函数，如果是前向则为**假删除**，否则则尝试**真删除**，但只有在“某个Tensor既被用户删除，且没有任何tensor依赖它（ref_cnt = 0）的时候可以真正删除”。
@@ -180,7 +180,7 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 假删除的实现很简单，打上删除标记，释放掉 tensorInfo 管理的显存即可；
 
 ### 碎片问题和优化方法
-{% include figure.html src="/figures/memory-management/5.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/5.jpg" caption=""%}
 
 #### 参数原地更新
 就是inplace
@@ -188,11 +188,11 @@ F=96BSlh^2(1+\frac{S}{6h}+\frac{V}{16lh})
 #### 改进估价函数
 
 引入碎片相关的信息
-{% include figure.html src="/figures/memory-management/6.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/6.jpg" caption=""%}
 有可能一个Tensor虽然不大，但是它左右的空闲段很大，因此释放这个Tensor也会有很大的收益
 
 #### 静态分配策略
-{% include figure.html src="/figures/memory-management/7.jpeg" caption=""%}
+{% include figure.html src="/figures/memory-management/7.jpg" caption=""%}
 <font color=purple>这个方法应该是最有效的</font>
 使用Pushdown算法，可以降低10%，不存在碎片
 
