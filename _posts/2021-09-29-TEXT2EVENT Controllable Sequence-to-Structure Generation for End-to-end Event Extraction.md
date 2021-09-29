@@ -1,6 +1,6 @@
 ---
 layout: post
-title: TEXT2EVENT: Controllable Sequence-to-Structure Generation for End-to-end Event Extraction
+title: TEXT2EVENT Controllable Sequence-to-Structure Generation for End-to-end Event Extraction
 comments: True
 author: 阚志刚
 ---
