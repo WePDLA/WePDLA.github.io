@@ -35,7 +35,7 @@ $$p(y|x)= \prod_{i}^{|y|}p(y_{i}|y_{<i})$$
 
 一般的事件信息都是这样的结构
 
-{% include figure.html src="2021-09-29-TEXT2EVENT" caption="Event Record Format"%}
+{% include figure.html src="/figures/2021-09-29-TEXT2EVENT/event record format.png" caption="Event Record Format"%}
 
 
 
