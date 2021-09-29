@@ -33,7 +33,7 @@ p(y|x)= \prod_{i}^{|y|}p(y_{i}|y_{<i})
 
 ## 1、正常的事件信息表示
 
-![Image](/figures/2021-09-29-TEXT2EVENT Controllable Sequence-to-Structure Generation for End-to-end Event Extraction/event record format.png)
+![Image](_posts\pictures\2021-09-29-TEXT2EVENT Controllable Sequence-to-Structure Generation for End-to-end Event Extraction\event record format.png)
 
 
 
