@@ -3,7 +3,7 @@ markdown: kramdown
 # Setup
 title: WeSIG's Blog
 #tagline: The Jekyll Butler
-url: https://github.com/WeSIG/
+url: https://WeSig.github.io/
 paginate: 1
 baseurl: ""
 permalink: pretty
