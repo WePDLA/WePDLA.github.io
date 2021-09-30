@@ -8,6 +8,11 @@ paginate: 1
 baseurl: ""
 permalink: pretty
 
+toc:
+  enabled: True
+  h_min: 1
+  h_max: 3
+
 # Gems
 plugins:
   - jekyll-gist
