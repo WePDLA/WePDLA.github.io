@@ -1,0 +1,52 @@
+<div class="book-summary">
+    <!-- <div id="book-search-input" role="search">
+        <input type="text" placeholder="Type to search" />
+    </div> -->
+    <nav role="navigation">
+        <ul class="summary">
+            {% if page.url == "/index.html" or page.url == "/" %}
+            <li class="chapter active" data-level="1.1" data-path="{{site.baseurl}}">
+            {% else %}
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}">
+            {% endif %}
+                <a href="{{site.url}}">
+                    {{ site.title | escape }}
+                </a>
+            </li>
+
+            <li class="divider"></li>
+            
+            {% assign reversed_posts = site.posts | reverse %}
+
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                    <a href="{{site.baseurl}}about">
+                        About
+                    </a></li>
+
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                    <a href="{{site.baseurl}}archive">
+                        Archive
+                    </a></li>
+
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                    <a href="{{site.baseurl}}publication">
+                        Publication
+                    </a></li>
+                    
+            <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
+                    <a href="{{site.baseurl}}software">
+                        Software
+                    </a></li>
+
+
+
+            <li class="divider"></li>
+
+            <li>
+                <a href="https://github.com/WeSig" target="blank" class="gitbook-link">
+                    Welcome to our github
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
