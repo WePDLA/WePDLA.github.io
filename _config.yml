@@ -5,6 +5,7 @@ title: WeSIG's Blog
 #tagline: The Jekyll Butler
 url: https://WeSig.github.io/
 paginate: 1
+homeurl: "https://WeSig.github.io/"
 baseurl: ""
 permalink: pretty
 
