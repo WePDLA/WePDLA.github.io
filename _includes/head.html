@@ -1,22 +1,37 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta charset="UTF-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-  <title>
-    {% if page.title == "Home" %}
-      {{ site.title }}{% if site.tagline %} &middot; {{ site.tagline }}{% endif %}
-    {% else %}
-      {{ page.title }} &middot; {{ site.title }}
-    {% endif %}
-  </title>
+{%- if page.title -%}
+    <title>{{ page.title | escape }} · {{ site.title | escape }}</title>
+{%- else -%}
+    <title>{{ site.title | escape }}</title>
+{%- endif -%}
 
-  <link rel="stylesheet" href="{{ 'styles.css' | relative_url }}">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ '/assets/apple-touch-icon-precomposed.png' | relative_url }}">
-  <link rel="shortcut icon" href="{{ '/assets/favicon.ico' | relative_url }}">
-  <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ 'atom.xml' | relative_url }}">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="description" content="{{site.description}}">
+
+{%- if site.gitbook_version -%}
+    <meta name="generator" content="Jekyll (using style of GitBook {{ site.gitbook_version | escape }})">
+{%- else -%}
+    <meta name="generator" content="Jekyll (using style of GitBook)">
+{%- endif -%}
+
+{%- if site.author -%}
+    <meta name="author" content="{{ site.author | escape }}">
+{%- endif -%}
+
+<link rel="stylesheet" href="{{site.baseurl}}/gitbook/style.css">
+<link rel="stylesheet" href="{{site.baseurl}}/gitbook/gitbook-plugin-fontsettings/website.css">
+<!-- <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css"> -->
+
+<link rel="stylesheet" href="{{site.baseurl}}/gitbook/rouge-highlight-colorful.css">
+
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{site.baseurl}}/gitbook/images/apple-touch-icon-precomposed-152.png">
+<link rel="shortcut icon" href="{{site.baseurl}}/gitbook/images/favicon.ico" type="image/x-icon">
   <script type="text/javascript"
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
   </script>
-
-  {% seo title=false %}
-</head>
