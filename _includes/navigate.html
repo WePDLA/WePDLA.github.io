@@ -9,7 +9,7 @@
             {% else %}
             <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}">
             {% endif %}
-                <a href="{{site.homeurl}}">
+                <a href="/">
                     {{ site.title | escape }}
                 </a>
             </li>
@@ -19,22 +19,22 @@
             {% assign reversed_posts = site.posts | reverse %}
 
             <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
-                    <a href="{{site.baseurl}}about">
+                    <a href="/about">
                         About
                     </a></li>
 
             <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
-                    <a href="{{site.baseurl}}archive">
+                    <a href="/archive">
                         Archive
                     </a></li>
 
             <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
-                    <a href="{{site.baseurl}}publication">
+                    <a href="/publication">
                         Publication
                     </a></li>
                     
             <li class="chapter" data-level="1.1" data-path="{{site.baseurl}}{{post.url}}">
-                    <a href="{{site.baseurl}}software">
+                    <a href="/software">
                         Software
                     </a></li>
 
