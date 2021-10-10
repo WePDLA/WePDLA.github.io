@@ -534,3 +534,7 @@ pytorch的checkpoint是一种用时间换显存的技术，一般训练模式下
 * [https://pytorch.org/docs/1.3.0/_modules/torch/utils/checkpoint.html#checkpoint](https://pytorch.org/docs/1.3.0/_modules/torch/utils/checkpoint.html#checkpoint)
 
 
+欢迎共同探讨问题，email: ytang95@163.com
+如果觉得我写的不错，对你有所启发的话，感谢打赏：
+{% include figure.html src="/figures/memory-management/cash.jpg" caption=""%}
+
