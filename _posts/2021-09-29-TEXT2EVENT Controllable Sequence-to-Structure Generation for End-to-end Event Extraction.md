@@ -1,11 +1,16 @@
 ---
 layout: post
-title: TEXT2EVENT Controllable Sequence-to-Structure Generation for End-to-end Event Extraction
-comments: True
+mathjax: true
+catalog: true
+comments: true
+top-tags-list: true
+header-img: "img/post-bg-universe.jpg"
+header-mask: 0.4
+title: 生成式事件抽取的方法
+subtitle: TEXT2EVENT Controllable Sequence-to-Structure Generation for End-to-end Event Extraction
 author: 阚志刚
+tags: [句子级事件抽取, 生成式抽取]
 ---
-
-作者： 阚志刚
 
 # 一、简介
 
