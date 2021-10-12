@@ -1,6 +1,6 @@
 ### Getting Started
 
-1. You will need [Ruby](https://www.ruby-lang.org/en/) and [Bundler](https://bundler.io/) to use [Jekyll](https://jekyllrb.com/). Following [Using Jekyll with Bundler](https://jekyllrb.com/tutorials/using-jekyll-with-bundler/) to fullfill the enviromental requirement.
+1. 环境基于如下包构建： [Ruby](https://www.ruby-lang.org/en/) and [Bundler](https://bundler.io/) to use [Jekyll](https://jekyllrb.com/)，环境配置需求参考 [Using Jekyll with Bundler](https://jekyllrb.com/tutorials/using-jekyll-with-bundler/)。在Ubuntu 或 Win10 WSL Ubuntu 上的软件安装命名如下：
 
 ```sh
 $ sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev
@@ -9,6 +9,8 @@ $ sudo apt-get install ruby ruby-dev ruby2.7 ruby2.7-dev rubygems
 
 $ sudo gem install jekyll jekyll-gist jekyll-sitemap jekyll-seo-tag jekyll-paginate
 ```
+
+Tips: 在 Win10 WSL Ubuntu 上设置环境时，需要切换到 Ubuntu 原始 apt 源，有人反馈国内部分 apt 源软件包安装问题。
 
 2. Installed dependencies in the `Gemfile`:
 
