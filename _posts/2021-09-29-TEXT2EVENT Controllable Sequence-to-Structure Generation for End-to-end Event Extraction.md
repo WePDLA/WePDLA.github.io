@@ -22,11 +22,7 @@ tags: [句子级事件抽取, 生成式抽取]
 
 一般的事件信息都是这样的结构
 
-<<<<<<< HEAD
-{% include figure.html src="/figures/2021-09-29-TEXT2EVENT/event record format.png" caption="Event Record Format"%}
-=======
 {% include figure.html src="2021-09-29-TEXT2EVENT" caption="Event Record Format"%}
->>>>>>> ee0758c7cf34333963091fa9a5e1845eb8f76ba5
 
 这种形式的表示便于人类理解，但是用编码解码器难以直接生成这样的事件信息。注意，这里是record-level的数据，如果是token-level的标注数据的话，本身就是一个由“B、I、O”组成的序列了。
 
