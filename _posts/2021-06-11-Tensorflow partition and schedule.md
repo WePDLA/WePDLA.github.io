@@ -1,5 +1,7 @@
 ---
 layout: post
+mathjax: true
+catalog: true
 title: The TensorFlow Partitioning and Scheduling Problem --- It's the Critical Path!
 comments: True
 author: liangpeng
@@ -38,15 +40,15 @@ SOTA数据流系统比如tensorflow需要将大的计算图划分到异构的CPU
 ![Figure 1](pictures/tensorflow_partition_schedule/1.png)
 
 划分函数$p:V \to D$将顶点映射到设备上，调度函数$f:V \to N$将顶点映射到顶点被执行的time slots上。则目标变为 
-$$min_f(max_{v\in V}f(v))\tag{1}$$ 
+$min_f(max_{v\in V}f(v))\tag{1}$ 
 Note: 函数f的返回值是顶点执行的开始时间，但是我们需要研究的是最小化最大完成时间。我们可以通过将所有顶点连接到一个没有出边的sink 顶点上来，并且连接边权重均为0，来解决这一问题。
 
 我们需要保证，内存约束是完全实现的。将$dev_j$上在时间$l$时的活跃边记为$E_{active}(l,j)$，则有：
-$$\forall dev_j \in D, l \in \mathbb{N}:\sum_{e_i \in E_{active(l,j)}}t_i \lt C_j \tag{2}$$
+$\forall dev_j \in D, l \in \mathbb{N}:\sum_{e_i \in E_{active(l,j)}}t_i \lt C_j \tag{2}$
 且要满足collocation constraints, 即他们需要分在同一设备上，
-$$\forall v_i,v_j \in V: (v_i,v_j)\in \mathbb{C}\to p(v_i)=p(v_j) \tag{3}$$
+$\forall v_i,v_j \in V: (v_i,v_j)\in \mathbb{C}\to p(v_i)=p(v_j) \tag{3}$
 最后，需要满足设备约束，即如果$v_i$在$dev_j$上，需要满足
-$$\forall v_i \in V, dev_j \in D: (v_i,dev_j)\in \mathbb{D}\to p(v_i)=dev_j \tag{4}$$
+$\forall v_i \in V, dev_j \in D: (v_i,dev_j)\in \mathbb{D}\to p(v_i)=dev_j \tag{4}$
 
 ### 2.1 NP-completeness
 **Theorem 2.1** 划分和调度问题是 NP-完全的。证明略
@@ -67,10 +69,10 @@ $$\forall v_i \in V, dev_j \in D: (v_i,dev_j)\in \mathbb{D}\to p(v_i)=dev_j \tag
 ### 3.3 Multi-Objective Heuristics
 #### 3.3.1 MITE
 MITE(Memory, Importance, Traffic, Execution time)。考虑四个优化目标，用一个启发函数来将顶点映射到设备上。
-$$ mite(v_i,dev_l) = mem(dev_l)\times imp(v_i, dev_l)\\\times traffic(v_i,dev_l)\times execTime(v_i,dev_l) \tag{8}$$
+$ mite(v_i,dev_l) = mem(dev_l)\times imp(v_i, dev_l)\\\times traffic(v_i,dev_l)\times execTime(v_i,dev_l) \tag{8}$
 具体计算看文章吧
 #### 3.3.2 Depth First Search
-$$dfsScore(v-i,dev_l) = traffic(v_i,dev_l)\\ \times execTime(v_i,dev_l) \tag{11}$$
+$dfsScore(v-i,dev_l) = traffic(v_i,dev_l)\\ \times execTime(v_i,dev_l) \tag{11}$
 
 ## 4 Scheduling
 ### 4.1 PCT Scheduling
