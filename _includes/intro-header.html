@@ -8,11 +8,9 @@
     header.intro-header{
         position: relative;
         background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.post-header-img }}{% endif %}');
-        background: {{ page.header-bg-css }};
     }
-
     {% if page.header-mask %}
-    header.intro-header .header-mask{
+    header.intro-header.header-mask{
         width: 100%;
         height: 100%;
         position: absolute;
@@ -33,7 +31,7 @@
     {% endif %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0">
                 <div class="post-heading">
                     <div class="tags">
                         {% for tag in page.tags %}
@@ -50,6 +48,29 @@
     </div>
 </header>
 {% endif %}
+
+
+
+{% if include.type == 'page' %}
+<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-lg-offset-0 col-md-10 col-md-offset-1">
+        {% if include.short %}
+        <div class="site-heading" id="tag-heading">
+        {% else %}
+        <div class="site-heading">
+        {% endif %}
+          <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
+          <span class="subheading">{{ page.description }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endif %}
+
+
 
 {% if include.type == 'keynote' %}
 <style type="text/css">
@@ -87,24 +108,5 @@
             </div>
         </div>
     </div>
-</header>
-{% endif %}
-
-{% if include.type == 'page' %}
-<header class="intro-header" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        {% if include.short %}
-        <div class="site-heading" id="tag-heading">
-        {% else %}
-        <div class="site-heading">
-        {% endif %}
-          <h1>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</h1>
-          <span class="subheading">{{ page.description }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
 </header>
 {% endif %}
