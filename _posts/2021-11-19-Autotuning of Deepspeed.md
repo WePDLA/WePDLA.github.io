@@ -2,7 +2,7 @@
 layout: post
 mathjax: true
 catalog: true
-title: Autotuning: DeepSpeed的自动并行方案 
+title: Autotuning of DeepSpeed的自动并行方案 
 comments: True
 author: liangpeng
 
