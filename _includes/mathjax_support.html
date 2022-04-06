@@ -1,18 +1,43 @@
+<!--
+https://docs.mathjax.org/en/v2.5-latest/tex.html#supported-latex-commands
+
+
+processEscapes: false
+When set to true, you may use \$ to represent a literal dollar sign, rather than using it as a math delimiter. 
+When false, \$ will not be altered, and the dollar sign may be considered part of a math delimiter. 
+
+processRefs: true,
+When set to true, MathJax will process \ref{...} outside of math mode.
+
+processEnvironments: true,
+When true, tex2jax looks not only for the in-line and display math delimiters, 
+but also for LaTeX environments (\begin{something}...\end{something}) and
+ marks them for processing by MathJax. When false, LaTeX environments will
+ not be processed outside of math mode.
+-->
+
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     TeX: {
+    MAXBUFFER: 100*1024,
+    Macros: {
+      RR: '{\\bf R}',
+      bold: ['{\\bf #1}', 1]
+    },
       equationNumbers: {
         autoNumber: "AMS"
       }
     },
     tex2jax: {
-      inlineMath: [ ['$','$']  ],
+      inlineMath: [ ['$','$'], ['\(','\)'] ], 
       displayMath: [ ['\[','\]'], ['$$','$$'] ],
+      processEscapes: true, 
+      processRefs: true, 
+      processEnvironments: true,
     }
   });
 </script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
-
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full"> </script>
 
 <!--
 http://docs.mathjax.org/en/latest/web/configuration.html
