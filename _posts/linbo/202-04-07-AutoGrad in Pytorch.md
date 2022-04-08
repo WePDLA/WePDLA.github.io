@@ -1,0 +1,81 @@
+---
+layout: post
+mathjax: true
+catalog: true
+comments: true
+top-tags-list: true
+header-img: "img/post-bg-universe.jpg"
+header-mask: 0.4
+title: 自动微分技术实现
+subtitle: AutoGrad in Pytorch
+author: 乔林波
+tags: [测试, 中文, 代码, 公式, 图片, 引用, 评论]
+---
+
+
+## 测试中文
+
+中文字符。。。abc...
+
+
+
+## 测试代码
+{% highlight yaml %}
+$ echo "Hello World!"
+Hello World!
+{% endhighlight %}
+
+
+## 测试公式
+
+使用 MathJax 2.7.9 渲染数学公式，支持的命令详见 [supported-latex-commands](https://docs.mathjax.org/en/v2.7-latest/tex.html#supported-latex-commands)
+
+
+### inlineMath
+Test 1: inlineMath, code:```$1\alpha\$```,
+test: $1\alpha$.
+
+### displayMath
+Test 2: displayMath without label, code: ```\[ \alpha = \sum_{i=1}^N \sigma_i \]```,
+test: \[ \alpha = \sum_{i=1}^N \sigma_i.\]
+
+Test 3: displayMath with label, 欧拉恒等式 \eqref{eq:Euler}, code: 
+```tex
+\begin{equation}
+  e^{i\pi} + 1 =0.
+  \label{eq:Euler}
+\end{equation}
+```
+test:
+\begin{equation}
+  e^{i\pi} + 1 =0.
+  \label{eq:Euler}
+\end{equation}
+
+
+Test 4: displayMath with label, code:
+```tex
+\begin{equation}
+\begin{array}{ll}
+c^2 & = a^2-b^2 \\\\ !!!a whitespace at the end!!!
+    & = (a+b)(a-b).
+\label{eq:gougu}
+\end{array}
+\end{equation}
+```
+test: 
+\begin{equation}
+\begin{array}{ll}
+c^2 & = a^2-b^2 \\\\ 
+    & = (a+b)(a-b).
+\label{eq:gougu}
+\end{array}
+\end{equation}
+
+公式\eqref{eq:gougu}是一个基本公式。
+
+
+## 测试图片
+
+{% include figure.html  height="652" width="488" src="/figures/20210321-test/tree.jpg" caption="图1：树。"%}
+
