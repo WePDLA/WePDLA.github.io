@@ -19,7 +19,7 @@ but also for LaTeX environments (\begin{something}...\end{something}) and
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     TeX: {
-    MAXBUFFER: 100*1024,
+    MAXBUFFER: 1024*1024,
     Macros: {
       RR: '{\\bf R}',
       bold: ['{\\bf #1}', 1]
@@ -30,8 +30,8 @@ but also for LaTeX environments (\begin{something}...\end{something}) and
     },
     tex2jax: {
       inlineMath: [ ['$','$'] ], 
-      displayMath: [ ['\[','\]'], ['$$','$$'] ],
-      processEscapes: true, 
+      displayMath: [ ['\[','\]'] ],
+      processEscapes: false, 
       processRefs: true, 
       processEnvironments: true,
     }
