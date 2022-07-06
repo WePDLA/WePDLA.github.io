@@ -44,9 +44,9 @@ License
 -------
 
 Apache License 2.0.
-Copyright (c) 2021-present WeSIG
+Copyright (c) 2021-present WePDLA
 
-WeSIG Blog is derived from [Hux Blog (Apache License)](https://github.com/Huxpro/huxpro.github.io)
+WePDLA Blog is derived from [Hux Blog (Apache License)](https://github.com/Huxpro/huxpro.github.io)
 Copyright (c) 2013-2016 Blackrock Digital LLC.
 
 Hux Blog is derived from [Clean Blog Jekyll Theme (MIT License)](https://github.com/BlackrockDigital/startbootstrap-clean-blog-jekyll/)
