@@ -86,13 +86,13 @@ TMA是一种**细粒度的方法**，用于为所有张量分配内存地址。�
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=NWQxNTkyMTIzZjg5OTUwMzAwMTM0NmRmNGEzNjc0YmVfRFp3WVpnaEZndWpiN2FGeWxpOXk3cTQ4YzExNDFNRHJfVG9rZW46Ym94Y241bkRjR2JadFdKSFVCc3ZyQ1ozcEJlXzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom:33%;" />
 
-为了在训练过程中实现较高的吞吐量，需要在**执行成本和内存消耗**之间做一个平衡。设$$p_i^k $$为第𝑖个操作符𝑜𝑖的划分模式，表示使用模式𝑘对𝑜𝑖进行划分，bs表示batch size，$$m_{inter} $$表示模式转换所需的额外内存空间。则总执行时间$$𝑡(𝑜_𝑖，𝑝^𝑘_𝑖，𝑏𝑠) $$和内存成本$$m(𝑜_𝑖，𝑝^𝑘_𝑖，𝑏𝑠) $$可以表示为：
+为了在训练过程中实现较高的吞吐量，需要在**执行成本和内存消耗**之间做一个平衡。设$p_i^k $为第𝑖个操作符𝑜𝑖的划分模式，表示使用模式𝑘对𝑜𝑖进行划分，bs表示batch size，$m_{inter} $表示模式转换所需的额外内存空间。则总执行时间$𝑡(𝑜_𝑖，𝑝^𝑘_𝑖，𝑏𝑠) $和内存成本$m(𝑜_𝑖，𝑝^𝑘_𝑖，𝑏𝑠) $可以表示为：
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDU3NWZkYzc1MWU0MGQxYThhN2ZhMzRmYWQ2Mjk5NjRfTVJJRzhpNEZ6akVSRjhqbXdGWHQ0WjNPdFRVa3NiMVNfVG9rZW46Ym94Y25JcDVSdGE0aGhVZmtXcVZYSnNocHFjXzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom: 33%;" />
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=MWQ4NDUzZDc4ZmZmY2VkMjA1NjhhNTk1NWZkMjJhNDNfUUxTZmNBWnkzdnp0UUNKTGxwbUhCYkE0NzcyVDB4OGJfVG9rZW46Ym94Y255aGM3UEUxMlRUR0Q0TWk4aHBYNGJoXzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom: 33%;" />
 
-则可以通过求解下面的优化问题来选择划分模式$$k^*_i $$：
+则可以通过求解下面的优化问题来选择划分模式$k^*_i $：
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=YzE0Y2JmODhjMzhlMWQ2YjA2YTBiM2E4YmMzYTA2MTFfQnRjNndYRUVLTVBZNUlJVkZnSXdxaldQUlcyYXVpUHlfVG9rZW46Ym94Y252dU9HT2E5aUNxVFVRU292aHhRUE1lXzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom:33%;" />
 
@@ -122,7 +122,7 @@ DTE主要解决了两个问题： (1)如何管理多个设备上的内存；(2)�
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=MWQyM2I3OTlmNDMyZWRiNzdlMjRjOWIyYmE0MjlmYjZfdzNjaVpQdVFoV3h2MzQ2V3U3RUtzVDVuVTA5Q3g5S3FfVG9rZW46Ym94Y25QVXp3NG9nYTFSR1ZvbWwzdzBXR3c1XzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom:33%;" />
 
-DTE优先选择释放那些**驱逐后不会产生新的内存碎片的张量**，如下图6所示。用$$𝑀_{𝑙𝑒𝑓𝑡}(𝑡) $$和$$ 𝑀_{right}(𝑡) $$分别表示为𝑡的左右两边空闲内存的大小，则**优先释放**$$ 𝑚(𝑡)+𝑀_{𝑙𝑒𝑓𝑡}(𝑡)+𝑀_{right}(𝑡) $$**更大的张量t**。DTE将通过最小化下面的代价函数来释放张量：
+DTE优先选择释放那些**驱逐后不会产生新的内存碎片的张量**，如下图6所示。用$𝑀_{𝑙𝑒𝑓𝑡}(𝑡) $和$ 𝑀_{right}(𝑡) $分别表示为𝑡的左右两边空闲内存的大小，则**优先释放**$ 𝑚(𝑡)+𝑀_{𝑙𝑒𝑓𝑡}(𝑡)+𝑀_{right}(𝑡) $**更大的张量t**。DTE将通过最小化下面的代价函数来释放张量：
 
 <img src="https://q2g8byci0t.feishu.cn/space/api/box/stream/download/asynccode/?code=MTIyOGI2YzFlMDdlNzdkMWE1MGM3MTlkYThhMDJmNzRfM3RHM2hnNGVNaDRMWkNzY1l6T2U2dTl1S3FTMmp1Z3NfVG9rZW46Ym94Y244WjdUM1JmSGEwdDNGQXFMVnozU0lmXzE2NjQyNDYxNTc6MTY2NDI0OTc1N19WNA" alt="img" style="zoom:33%;" />
 
